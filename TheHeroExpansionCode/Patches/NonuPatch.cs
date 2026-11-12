@@ -2,6 +2,7 @@
 using MegaCrit.Sts2.Core.Events;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Events;
+using TheHeroExpansion.TheHeroExpansionCode.Helpers;
 using TheHeroExpansion.TheHeroExpansionCode.Relics;
 
 namespace TheHeroExpansion.TheHeroExpansionCode;
@@ -16,11 +17,10 @@ public static class NonuPatch
         
         var relic = ModelDb.Relic<DaintyDandelion>().ToMutable();
 
-        var method = typeof(AncientEventModel).GetMethod("RelicOption",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
-            null, new[] { typeof(RelicModel), typeof(string), typeof(string) }, null);
+        var option = AncientRelicOption.Create(__instance, relic);
+        if (option == null)
+            return;
 
-        var option = (EventOption)method.Invoke(__instance, new object[] { relic, "INITIAL", null });
         var list = __result.ToList();
         list.Add(option);
         __result = list;
